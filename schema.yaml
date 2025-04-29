@@ -10,12 +10,19 @@ classes:
       - type
       - geometry
       - version
+      - theme
 
   building:
     is_a: feature
+    slot_usage:
+      theme:
+        range: theme_buildings
 
   building_part:
     is_a: feature
+    slot_usage:
+      theme:
+        range: theme_buildings
 
 slots:
   id:
@@ -29,6 +36,11 @@ slots:
     required: true
     range: geometry
     description: OGC simple geometry of the feature
+  theme:
+    slot_uri: schema:theme
+    required: true
+    range: theme
+    description: Overture theme this feature type belongs to
   type:
     slot_uri: schema:type
     required: true
@@ -56,3 +68,14 @@ types:
     base: str
     pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
     description: Universally Unique Identifier (UUID)
+
+enums:
+  theme:
+    description: Overture theme, e.g. buildings or transportation
+    permissible_values:
+      addresses:
+      buildings:
+  theme_buildings:
+    description: Narrows the theme enumeration to just the buildings theme
+    permissible_values:
+      buildings:
