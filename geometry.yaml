@@ -1,0 +1,17 @@
+id: https://overturemaps.org/schema/geometry
+name: geometry
+
+classes:
+  geometry:
+
+  point:
+    is_a: geometry
+
+  line_string:
+    is_a: geometry
+
+  polygon:
+    is_a: geometry
+
+  multi_polygon:
+    is_a: geometry

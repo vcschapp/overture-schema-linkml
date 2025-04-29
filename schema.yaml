@@ -1,11 +1,13 @@
 id: htps://overturemaps.org/schema
 name: schema
+imports: geometry
 
 classes:
   feature:
     slots:
       - id
       - type
+      - geometry
 
 slots:
   id:
@@ -19,6 +21,11 @@ slots:
     required: true
     range: type
     description: Feature type, e.g. building or place
+  geometry:
+    slot_uri: schema:geometry
+    required: true
+    range: geometry
+    description: OGC simple geometry of the feature
 
 types:
   uuid:
