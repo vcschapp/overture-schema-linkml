@@ -4,10 +4,17 @@ imports: geometry
 
 classes:
   feature:
+    abstract: true
     slots:
       - id
       - type
       - geometry
+
+  building:
+    is_a: feature
+
+  building_part:
+    is_a: feature
 
 slots:
   id:
@@ -19,7 +26,8 @@ slots:
   type:
     slot_uri: schema:type
     required: true
-    range: type
+    designates_type: true
+    range: string
     description: Feature type, e.g. building or place
   geometry:
     slot_uri: schema:geometry
@@ -28,14 +36,10 @@ slots:
     description: OGC simple geometry of the feature
 
 types:
+  string:
+    base: str
+    description: Any string value
   uuid:
     base: str
     pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
     description: Universally Unique Identifier (UUID)
-
-enums:
-  type:
-    description: Type of Overture feature
-    permissible_values:
-      building:
-      building_part:
