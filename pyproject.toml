@@ -1,0 +1,15 @@
+[project]
+name = "overture-linkml"
+version = "0.1.0"
+description = "Custom LinkML extensions for Overture Maps schema"
+dependencies = ["linkml", "linkml-runtime"]
+
+[project.scripts]
+overture-linkml = "cli.main:cli"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["cli", "generators"]
