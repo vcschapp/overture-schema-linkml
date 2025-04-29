@@ -9,6 +9,7 @@ classes:
       - id
       - type
       - geometry
+      - version
 
   building:
     is_a: feature
@@ -23,19 +24,31 @@ slots:
     required: true
     range: uuid
     description: Unique ID of the feature
+  geometry:
+    slot_uri: schema:geometry
+    required: true
+    range: geometry
+    description: OGC simple geometry of the feature
   type:
     slot_uri: schema:type
     required: true
     designates_type: true
     range: string
     description: Feature type, e.g. building or place
-  geometry:
-    slot_uri: schema:geometry
+  version:
+    slot_uri: schema:version
     required: true
-    range: geometry
-    description: OGC simple geometry of the feature
+    range: integer_positive
+    description: >-
+        Version number of the feature, incremented in each Overture
+        release where the geometry or attributes of the feature
+        changed.
 
 types:
+  integer_positive:
+    base: int
+    minimum_value: 1
+    description: An integer greater than or equal to 1
   string:
     base: str
     description: Any string value
