@@ -14,12 +14,14 @@ classes:
 
   building:
     is_a: feature
+    tree_root: true
     slot_usage:
       theme:
         range: theme_buildings
 
   building_part:
     is_a: feature
+    tree_root: true
     slot_usage:
       theme:
         range: theme_buildings
