@@ -23,6 +23,18 @@ classes:
       value:
         range: string_non_empty_trimmed
 
+  name_rule:
+    attributes:
+      variant:
+        range: name_variant
+        required: true
+      value:
+        range: string_non_empty_trimmed
+        required: true
+    mixins:
+      - scope_geometric_range
+      - scope_side
+
   names:
     attributes:
       primary:
@@ -46,6 +58,61 @@ classes:
         inlined_as_list: false
         minimum_cardinality: 1
         range: name_common
+      rules:
+        description: >-
+            Rules for names that cannot be specified in the simple common
+            names property. These rules can cover other name variants,
+            such as official, alternate, and short; and they can
+            optionally include geometric scoping (linear referencing),
+            side-of-facing scoping, and perspectives for complex cases.
+        required: false
+        multivalued: true
+        minimum_cardinality: 1
+        range: name_rule
+
+
+  # =================================
+  # SCOPING MIXINGS
+  # =================================
+
+  scope_geometric_range:
+    description: >-
+      Establishes a scope that applies only between two positions along
+      a linear path. Enables range-based linear referencing.
+    mixin: true
+    attributes:
+      between:
+        description: >-
+          Represents the range of positions along a linaer path between
+          which something occurs, e.g. a road or rail segment has a
+          tunnel between two known positions.
+        multivalued: true
+        minimum_cardinality: 2
+        maximum_cardinality: 2
+        range: linearly_referenced_position
+        # KNOWN BUG: LinkML's JSON Schema generator gets confused by
+        #            indirection. When range is set to "percentage",
+        #            which is a type I have defined directly, it
+        #            correctly limits the array `items` to the JSON
+        #            type `number`. But when I set it to
+        #            `linearly_referenced_position`, which is a type that
+        #            is BASED ON the type `percentage`, it incorrectly
+        #            generates the JSON type `string` for the `items.
+  scope_side:
+    description: >-
+      Establishes a scope that applies only to the left or right-hand
+      side, relative to an orientation, e.g. a name that applies only to
+      the left side of a road segment when facing in the direction of
+      the segment orientation.
+    mixin: true
+    attributes:
+      side:
+        description: >-
+          Represents the side on which something occurs relative to a
+          facing or heading direction, e.g. the side of a road relative
+          to the road orientation, or relative to the direction of
+          travel of a person or vehicle.
+        range: side
 
   # =================================
   # FEATURE TYPES
@@ -138,6 +205,19 @@ types:
     description: Lexically valid BCP-47 language tag such as 'en', 'en-US', 'zh-Hans'
     base: str
     pattern: "^(?:(?:[A-Za-z]{2,3}(?:-[A-Za-z]{3}){0,3}?)|(?:[A-Za-z]{4,8}))(?:-[A-Za-z]{4})?(?:-[A-Za-z]{2}|[0-9]{3})?(?:-(?:[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}))*(?:-[A-WY-Za-wy-z0-9](?:-[A-Za-z0-9]{2,8})+)*$"
+  linearly_referenced_position:
+    uri: overture:type.linearly_referenced_position
+    description: >-
+        A linearly-referenced position between 0% and 100% of the
+        distance along a linear path such as a road or river
+        center-line.
+    base: percentage
+  percentage:
+    uri: overture:type.percentage
+    description: A clamped percentage between 0% and 100%, inclusive
+    base: float
+    minimum_value: 0.0
+    maximum_value: 1.0
   string_non_empty_trimmed:
     uri: overture:type.string_non_empty_trimmed
     description: Non-empty string without leading or trailing whitespace
@@ -150,6 +230,18 @@ types:
     pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
 enums:
+  name_variant:
+    description: Broad category of feature name, e.g. the official name
+    permissible_values:
+      common:
+      official:
+      alternate:
+      short:
+  side:
+    description: Left or right
+    permissible_values:
+      left:
+      right:
   theme:
     description: Overture theme, e.g. buildings or transportation
     permissible_values:

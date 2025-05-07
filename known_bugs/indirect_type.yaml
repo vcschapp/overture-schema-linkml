@@ -1,0 +1,22 @@
+id: https://github.com/linkml/linkml/issues/2666
+name: indirect_type_bug
+
+prefixes:
+  example: https://example.org/linkml
+
+classes:
+  example:
+    attributes:
+      foo:
+        range: foo
+      bar:
+        range: bar
+
+types:
+  foo:
+    uri: example:foo
+    base: float
+    minimum_value: 0.0
+  bar:
+    uri: example:bar
+    base: foo
