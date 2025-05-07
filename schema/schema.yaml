@@ -65,12 +65,20 @@ classes:
     is_a: feature
     tree_root: true
     slots:
+      - building_id
       - names
     slot_usage:
+      building_id:
+        required: true
       theme:
         range: theme_buildings
 
 slots:
+  building_id:
+    slot_uri: schema:building_id
+    range: building
+    inlined: false
+    description: Unique ID of an associated building feature
   id:
     identifier: true
     slot_uri: schema:id
