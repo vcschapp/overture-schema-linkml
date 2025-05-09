@@ -215,7 +215,7 @@ types:
   percentage:
     uri: overture:type.percentage
     description: A clamped percentage between 0% and 100%, inclusive
-    base: float
+    base: decimal
     minimum_value: 0.0
     maximum_value: 1.0
   string_non_empty_trimmed:
