@@ -70,6 +70,47 @@ classes:
         minimum_cardinality: 1
         range: name_rule
 
+  source:
+    description: >-
+      Source record identifying source data from which the feature
+      property, or the whole feature, is derived.
+    attributes:
+      property:
+        description: >-
+          The property of the containing feature for which this source
+          record identifies the source. Contains a JSON Pointer value
+          indicating the feature property this record applies to, where
+          the empty string means the record applies to the entire
+          feature.
+        required: true
+        range: jsonpointer
+      dataset:
+        description: >-
+          Source dataset from which the data for referenced property
+          or entire feature is derived. Contains a value from the
+          approved sources list maintained by the Overture Map Data
+          Working Group. Consult this list for richer metadata about
+          the dataset, including license and source organization.
+        required: true
+        range: string_non_empty_trimmed
+      record_id:
+        description: >-
+          Identifies the record within the source dataset where the
+          source data can be found. The ID format and meaning of this
+          ID value is specific to the source dataset.
+        required: false
+        range: string_non_empty_trimmed
+      update_time:
+        description: >-
+          Last update time of the soure record if it is known.
+        required: false
+        range: timestamp
+      confidence:
+        description: >-
+          Confidence value from source dataset, particularl relevant
+          for AI and ML-derived data.
+        required: false
+        range: confidence
 
   # =================================
   # SCOPING MIXINGS
@@ -125,6 +166,7 @@ classes:
       - type
       - geometry
       - version
+      - sources
       - theme
 
   building:
@@ -174,6 +216,19 @@ slots:
     required: true
     range: string_non_empty_trimmed
     description: Most commonly-used name of the feature
+  sources:
+    slot_uri: overture:slot.sources
+    required: false
+    range: source
+    multivalued: true
+    inlined_as_list: false
+    minimum_cardinality: 1
+    description: >-
+      List of source datasets from which the feature data are derived.
+      All features features must have a root level source (whose
+      `property` value is blank) which is the default source for all
+      feature properties which do not have their own explicit source
+      record.
   theme:
     slot_uri: overture:slot.theme
     required: true
@@ -195,6 +250,13 @@ slots:
         changed.
 
 types:
+  confidence:
+    uri: overture:type.confidence
+    description: >-
+      Confidence level in the validity of data expressed as a percentage
+      value where 0% represents total disbelief and 100% represents
+      total confidence.
+    base: percentage
   integer_positive:
     uri: xsd:positiveInteger
     description: Integer greater than or equal to 1
@@ -208,9 +270,8 @@ types:
   linearly_referenced_position:
     uri: overture:type.linearly_referenced_position
     description: >-
-        A linearly-referenced position between 0% and 100% of the
-        distance along a linear path such as a road or river
-        center-line.
+      A linearly-referenced position between 0% and 100% of the distance
+      along a linear path such as a road or river center-line.
     base: percentage
   percentage:
     uri: overture:type.percentage
@@ -223,6 +284,10 @@ types:
     description: Non-empty string without leading or trailing whitespace
     base: string_trimmed
     pattern: ^(\S.*)?\S$
+  timestamp:
+    uri: overture:type.timestamp
+    description: An ISO-8601 formatted timestamp string
+    base: datetime
   uuid:
     uri: overture:type.uuid
     description: Universally Unique Identifier (UUID)
