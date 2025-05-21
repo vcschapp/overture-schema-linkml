@@ -111,6 +111,8 @@ classes:
           for AI and ML-derived data.
         required: false
         range: confidence
+    mixins:
+      - scope_geometric_range
 
   # =================================
   # SCOPING MIXINGS
