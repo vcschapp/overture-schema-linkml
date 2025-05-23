@@ -33,6 +33,7 @@ classes:
         required: true
     mixins:
       - scope_geometric_range
+      - scope_perspectives
       - scope_side
 
   names:
@@ -69,6 +70,30 @@ classes:
         multivalued: true
         minimum_cardinality: 1
         range: name_rule
+
+  perspectives:
+    attributes:
+      mode:
+        description: >-
+          Whether the perspective holders accept or dispute the
+          proposed fact.
+        required: true
+        range: perspective_mode
+      countries:
+        description: Countries holding the given mode of perspective.
+        required: true
+        multivalued: true
+        inlined_as_list: true
+        minimum_cardinality: 1
+        # KNOWN FEATURE GAP: JSON Schema allows us to specify that the
+        #                    array may only contain unique items, but
+        #                    LinkML does not have an analogous feature.
+        #                    Ideally we'd be able to specify:
+        #                    uniqueness, sortedness, and set-ness (is
+        #                    it an array with set semantics?) which
+        #                    implies uniqueness but perhaps would come
+        #                    with other representation-specific goodies.
+        range: country_code
 
   source:
     description: >-
@@ -115,7 +140,7 @@ classes:
       - scope_geometric_range
 
   # =================================
-  # SCOPING MIXINGS
+  # SCOPING MIXINS
   # =================================
 
   scope_geometric_range:
@@ -129,6 +154,7 @@ classes:
           Represents the range of positions along a linaer path between
           which something occurs, e.g. a road or rail segment has a
           tunnel between two known positions.
+        required: false
         multivalued: true
         minimum_cardinality: 2
         maximum_cardinality: 2
@@ -141,6 +167,19 @@ classes:
         #            `linearly_referenced_position`, which is a type that
         #            is BASED ON the type `percentage`, it incorrectly
         #            generates the JSON type `string` for the `items.
+  scope_perspectives:
+    description: >-
+      Establishes a scope that applies only when a specific political
+      perspective is adopted.
+    mixin: true
+    attributes:
+      perspectives:
+        description: >-
+          Represents the political perspectives from which a proposed
+          fact is accepted or disputed.
+        required: false
+        range: perspectives
+
   scope_side:
     description: >-
       Establishes a scope that applies only to the left or right-hand
@@ -155,6 +194,7 @@ classes:
           facing or heading direction, e.g. the side of a road relative
           to the road orientation, or relative to the direction of
           travel of a person or vehicle.
+        required: false
         range: side
 
   # =================================
@@ -259,6 +299,11 @@ types:
       value where 0% represents total disbelief and 100% represents
       total confidence.
     base: percentage
+  country_code:
+    uri: overture:type.country
+    description: ISO 3166-1 alpha-2 country code
+    base: str
+    pattern: "^[A-Z]{2}$"
   integer_positive:
     uri: xsd:positiveInteger
     description: Integer greater than or equal to 1
@@ -304,6 +349,12 @@ enums:
       official:
       alternate:
       short:
+  perspective_mode:
+    description: >-
+      Whether perspective holder accepts or disputes the proposed fact.
+    permissible_values:
+      accepted_by:
+      disputed_by:
   side:
     description: Left or right
     permissible_values:
