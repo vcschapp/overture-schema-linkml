@@ -156,8 +156,7 @@ classes:
           tunnel between two known positions.
         required: false
         multivalued: true
-        minimum_cardinality: 2
-        maximum_cardinality: 2
+        exact_cardinality: 2
         range: linearly_referenced_position
         # KNOWN BUG: LinkML's JSON Schema generator gets confused by
         #            indirection. When range is set to "percentage",
