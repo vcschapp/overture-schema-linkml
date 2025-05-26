@@ -36,3 +36,93 @@ Here is a PlantUML rendering of the progress to date using `$ linkml generate pl
 ## Enhancement Requests
 
 - [Native geometry type](https://github.com/linkml/linkml/issues/2667)
+
+# Entity-Relationship Diagram
+
+Below is the *verbatim* output of `$ linkml generate erdiagram schema/schema.yaml`:
+
+```mermaid
+erDiagram
+Geometry {
+
+}
+Point {
+
+}
+LineString {
+
+}
+Polygon {
+
+}
+MultiPolygon {
+
+}
+NameCommon {
+    language_tag language  
+    string_non_empty_trimmed value  
+}
+NameRule {
+    name_variant variant  
+    string_non_empty_trimmed value  
+    linearly_referenced_positionList between  
+    side side  
+}
+Names {
+    string_non_empty_trimmed primary  
+}
+Perspectives {
+    perspective_mode mode  
+    country_codeList countries  
+}
+Source {
+    jsonpointer property  
+    string_non_empty_trimmed dataset  
+    string_non_empty_trimmed record_id  
+    timestamp update_time  
+    confidence confidence  
+    linearly_referenced_positionList between  
+}
+ScopeGeometricRange {
+    linearly_referenced_positionList between  
+}
+ScopePerspectives {
+
+}
+ScopeSide {
+    side side  
+}
+Feature {
+    uuid id  
+    string type  
+    integer_positive version  
+    theme theme  
+}
+Building {
+    uuid id  
+    string type  
+    integer_positive version  
+    theme_buildings theme  
+}
+BuildingPart {
+    uuid id  
+    string type  
+    integer_positive version  
+    theme_buildings theme  
+}
+
+NameRule ||--|o Perspectives : "perspectives"
+Names ||--}o NameCommon : "common"
+Names ||--}o NameRule : "rules"
+ScopePerspectives ||--|o Perspectives : "perspectives"
+Feature ||--|| Geometry : "geometry"
+Feature ||--}o Source : "sources"
+Building ||--|o Names : "names"
+Building ||--|| Geometry : "geometry"
+Building ||--}o Source : "sources"
+BuildingPart ||--|| Building : "building_id"
+BuildingPart ||--|o Names : "names"
+BuildingPart ||--|| Geometry : "geometry"
+BuildingPart ||--}o Source : "sources"
+
+```
